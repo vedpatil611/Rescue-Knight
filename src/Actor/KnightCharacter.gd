@@ -2,17 +2,17 @@ extends KinematicBody2D
 
 func _ready():
 	sprite = get_node("Sprite")
+	attackCollision = get_node("AttackArea/AttackCollision")
 	
 var speed: int = 200
-var jumpForce: int = 600
+var jumpForce: int = 500
 var gravity: int = 800
 var swordDamageCollion: int = 24
-
 var isAttacking: bool = false
 
-var velocity: Vector2 = Vector2.ZERO
-
+var attackCollision: CollisionShape2D = null
 var sprite: AnimatedSprite = null
+var velocity: Vector2 = Vector2.ZERO
 
 func _physics_process(delta):
 	# Movement input
@@ -51,6 +51,7 @@ func _physics_process(delta):
 		sprite.play("attack1")
 		velocity.x = 0
 		isAttacking = true
+		attackCollision.disabled = false
 		get_tree().get_root().set_disable_input(true)
 	# movemnet with velocity
 	move_and_slide(velocity, Vector2.UP)
@@ -59,4 +60,5 @@ func _physics_process(delta):
 func _on_Sprite_animation_finished():
 	if(sprite.animation == "attack1"):
 		isAttacking = false
+		attackCollision.disabled = true
 		get_tree().get_root().set_disable_input(false)
